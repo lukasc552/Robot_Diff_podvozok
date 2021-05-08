@@ -30,7 +30,7 @@ robot.vel_l = 0.0
 robot.phi = -np.pi/2
 
 mierka = 1000
-vel_drive = 20.0
+vel_drive = 10.0
 vel_stop = 0.0
 
 while True:
