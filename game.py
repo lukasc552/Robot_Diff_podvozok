@@ -1,5 +1,4 @@
 import pygame
-import sys
 import robot
 import numpy as np
 
@@ -38,7 +37,6 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            sys.exit()
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:

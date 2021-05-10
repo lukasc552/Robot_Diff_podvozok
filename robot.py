@@ -23,10 +23,9 @@ class Robot:
         self.vel_l = 0.0
         self.vel_t = 0.0
         self.omega = 0.0
+        self.anim_num = 1
 
-    # time_vector = [0, 5, 10, 15, 20]
-    # vel_L = [2, -1, 0, 2, 1]
-    # vel_R = [2, 1, 0, -2, 1]
+    #  Uloha 1
     def move(self, time_vector, vel_l, vel_r, step=0.01):
         out_x = [self.pos_x]
         out_y = [self.pos_y]
@@ -75,6 +74,7 @@ class Robot:
         self.mid_left_wheel = out_left[-1]
         return out_t, out_x, out_y, out_phi, out_right, out_left
 
+    #  Uloha 2
     def make_square(self, a):
         vl = [1, 1, 1, 1, 1, 1, 1, 1]
         vr = [1, -1, 1, -1, 1, -1, 1, -1]
@@ -94,10 +94,11 @@ class Robot:
                 t_omega = angle/omega_t
                 t.append(t[-1] + abs(truncate(t_omega, 4)))
 
-        t.append(t[-1] + abs(truncate(t_omega, 3)))
-        time, x, y, fi, right_wheel, left_wheel = self.move(t, vl, vr, 0.001)
+        t.append(t[-1] + abs(truncate(t_omega, 4)))
+        time, x, y, fi, right_wheel, left_wheel = self.move(t, vl, vr, 0.0001)
         return time, x, y, fi, right_wheel, left_wheel
 
+    #  Uloha 3
     def make_line(self, r1, l1, r2):
         vl = [1, 1, 1]
         vr1 = self.calc_vr_via_vl(-r1, vl[0])
@@ -118,12 +119,11 @@ class Robot:
                 t_omega = angle / omega_t
                 t.append(t[-1] + abs(truncate(t_omega, 4)))
 
-        time, x, y, fi, right_wheel, left_wheel = self.move(t, vl, vr, 0.001)
+        time, x, y, fi, right_wheel, left_wheel = self.move(t, vl, vr, 0.0001)
         return time, x, y, fi, right_wheel, left_wheel
 
-    @staticmethod
-    def animate_movement(fig, t, x, y, rx, ry, lx, ly, saving=False):
-        every = 10
+    def animate_movement(self, t, x, y, rx, ry, lx, ly, saving=False):
+        every = 100
         temp_x = x[0::every]
         temp_y = y[0::every]
         temp_rx = rx[0::every]
@@ -132,14 +132,12 @@ class Robot:
         temp_ly = ly[0::every]
         fig_num = 1
 
-        # figure = plt.figure()
+        fig = plt.figure()
         ax = fig.add_subplot(111, autoscale_on=False, xlim=(min(temp_x)-0.2, max(temp_x)+0.2), ylim=(min(temp_y)-0.2, max(temp_y)+0.2))
         ax.grid()
         line, = ax.plot([], [], 'b-', lw=2)
         line_l, = ax.plot([], [], 'r-', lw=2)
         line_r, = ax.plot([], [], 'g-', lw=2)
-        # time_template = 'time_vector = %.1fs'
-        # time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
         thisx = []
         thisy = []
         l_x = []
@@ -152,7 +150,6 @@ class Robot:
             line.set_data([], [])
             line_l.set_data([], [])
             line_r.set_data([], [])
-            # time_text.set_text('')
             return line, line_l, line_r,
 
         def animate(i):
@@ -166,16 +163,16 @@ class Robot:
             line.set_data(thisx, thisy)
             line_l.set_data(l_x, l_y)
             line_r.set_data(r_x, r_y)
-            # time_text.set_text(time_template % (i * dt))
             return line, line_l, line_r,
 
-        ani = animation.FuncAnimation(fig, animate, np.arange(1, len(temp_x)), interval=1, blit=True, init_func=init)
+        ani = animation.FuncAnimation(fig, animate, np.arange(1, len(temp_x)), interval=0.1, blit=True, init_func=init)
 
         if saving:
             Writer = animation.writers['ffmpeg']
             writer = Writer(fps=30, metadata=dict(artist='Lukas'), bitrate=1800)
 
-            ani.save('Animations/' + 'animacia' + '_{}'.format(fig_num) + '.mp4', writer=writer)
+            ani.save('Animations/' + 'animacia' + '_{}'.format(self.anim_num) + '.mp4', writer=writer)
+            self.anim_num += 1
 
         plt.show()
 
@@ -362,4 +359,11 @@ class Robot:
 
         pygame.draw.lines(surface, black, True, scatter_l, 4)
         pygame.draw.lines(surface, black, True, scatter_r, 4)
+
+        # smer otocenia v hre
+
+        # l_sipka = 50
+        # x_sipka = self.pos_x + (l_sipka * np.cos(self.phi))
+        # y_sipka = self.pos_y + (l_sipka * np.sin(self.phi))
+        # pygame.draw.line(surface, (0, 255, 0), [self.pos_x, self.pos_y], [x_sipka, y_sipka], 4)
 
