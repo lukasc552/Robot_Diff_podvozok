@@ -15,7 +15,7 @@ def split_to_vector(string):
 class Root(Tk):
     def __init__(self, robot):
         super(Root, self).__init__()
-        self.minsize(400, 600)
+        self.minsize(350, 400)
         self.robot = robot
         self.num_fig = 1
 
@@ -32,18 +32,18 @@ class Root(Tk):
         self.vel_r_entry.grid(row=4, column=2, sticky=W + E)
 
         draw1 = Button(self.app_frame, text='Vykresli', command=self.task1)
-        draw1.grid(row=5, column=1)
+        draw1.grid(row=5, column=1, columnspan=2)
         anim1 = Button(self.app_frame, text='Animuj', command=self.anim1)
-        anim1.grid(row=5, column=2)
+        anim1.grid(row=5, column=3)
 
         # uloha2
         self.a_entry = Entry(self.app_frame)
         self.a_entry.grid(row=7, column=2, sticky=W + E)
 
         draw2 = Button(self.app_frame, text='Vykresli', command=self.task2)
-        draw2.grid(row=8, column=1)
+        draw2.grid(row=8, column=1, columnspan=2)
         anim2 = Button(self.app_frame, text='Animuj', command=self.anim2)
-        anim2.grid(row=8, column=2)
+        anim2.grid(row=8, column=3)
 
         # uloha3
         self.r1_entry = Entry(self.app_frame)
@@ -54,10 +54,10 @@ class Root(Tk):
         self.r2_entry.grid(row=12, column=2, sticky=W + E)
 
         draw3 = Button(self.app_frame, text='Vykresli', command=self.task3)
-        draw3.grid(row=13, column=1)
+        draw3.grid(row=13, column=1, columnspan=2)
         anim3 = Button(self.app_frame, text='Animuj', command=self.anim3)
-        anim3.grid(row=13, column=2)
-        Button(self.app_frame, text='HRA', command=self.hra).grid(row=2, column=3, rowspan=2)
+        anim3.grid(row=13, column=3)
+        Button(self.app_frame, text='HRA', command=self.hra, bg="green").grid(row=2, column=3, rowspan=2, padx=5, pady=5)
         Button(self.app_frame, text='QUIT', command=self.quit).grid(row=14, column=1, columnspan=2)
 
     def hra(self):
@@ -66,13 +66,14 @@ class Root(Tk):
     def graf(self, t, x, y, fi, right_wheel, left_wheel):
         plt.figure(self.num_fig)
         self.num_fig += 1
-        plt.plot(x, y)
+        plt.plot(x, y, label='Tazisko')
         right_wheel_x = [item[0] for item in right_wheel]
         right_wheel_y = [item[1] for item in right_wheel]
-        plt.plot(right_wheel_x, right_wheel_y, 'g')
+        plt.plot(right_wheel_x, right_wheel_y, 'g', label='Prave koleso')
         left_wheel_x = [item[0] for item in left_wheel]
         left_wheel_y = [item[1] for item in left_wheel]
-        plt.plot(left_wheel_x, left_wheel_y, 'r')
+        plt.plot(left_wheel_x, left_wheel_y, 'r', label='Lave koleso')
+        plt.legend()
 
         plt.grid()
         plt.show()
@@ -125,8 +126,6 @@ class Root(Tk):
         right_wheel_y = [item[1] for item in right_wheel]
         left_wheel_x = [item[0] for item in left_wheel]
         left_wheel_y = [item[1] for item in left_wheel]
-        # if self.app_frame.checkbox_anim.get() == 1:
-
         self.robot.animate_movement(t, x, y, right_wheel_x, right_wheel_y, left_wheel_x, left_wheel_y, saving=self.app_frame.checkbox_anim.get() == 1)
 
 
@@ -163,21 +162,21 @@ class Frames(Frame):
         self.rowconfigure(13, pad=5)
         self.rowconfigure(14, pad=5)
 
-        Label(self, text="Vykreslenie trajektorie podla preddefinovanych rychlosti").grid(row=1, column=1, columnspan=2, sticky=W + E)
-        Label(self, text="Time vec.").grid(row=2, column=1, sticky=W + E)
-        Label(self, text="Lavy vec.").grid(row=3, column=1, sticky=W + E)
-        Label(self, text="Pravy vec.").grid(row=4, column=1, sticky=W + E)
+        Label(self, text="Vykreslenie trajektorie podla preddefinovanych rychlosti", bg="white").grid(row=1, column=1, columnspan=4, sticky=W + E)
+        Label(self, text="Cas napr. 0,5,10").grid(row=2, column=1, sticky=W + E)
+        Label(self, text="Lavy vec. napr. 1,-2,2").grid(row=3, column=1, sticky=W + E)
+        Label(self, text="Pravy vec. napr. 1,-2,2").grid(row=4, column=1, sticky=W + E)
 
-        Label(self, text="Vykreslenie kocky taziskom podvozku").grid(row=6, column=1, columnspan=2,
+        Label(self, text="Vykreslenie kocky taziskom podvozku", bg="white").grid(row=6, column=1, columnspan=4,
                                                                      sticky=W + E)
-        Label(self, text="Strana kocky").grid(row=7, column=1, sticky=W + E)
+        Label(self, text="Strana kocky [m]").grid(row=7, column=1, sticky=W + E)
 
-        Label(self, text="Vykreslenie trajektorie krivky").grid(row=9, column=1, columnspan=2,
+        Label(self, text="Vykreslenie trajektorie krivky", bg="white").grid(row=9, column=1, columnspan=4,
                                                                 sticky=W + E)
-        Label(self, text="R1").grid(row=10, column=1, sticky=W + E)
-        Label(self, text="L").grid(row=11, column=1, sticky=W + E)
-        Label(self, text="R2").grid(row=12, column=1, sticky=W + E)
-        Checkbutton(self, text='Save to .mp4', variable=self.checkbox_anim, onvalue=1, offvalue=0).grid(row=14, column=3, padx=0,
+        Label(self, text="R1 [m]").grid(row=10, column=1, sticky=W + E)
+        Label(self, text="L [m]").grid(row=11, column=1, sticky=W + E)
+        Label(self, text="R2 [m]").grid(row=12, column=1, sticky=W + E)
+        Checkbutton(self, text='Uloz do .mp4', variable=self.checkbox_anim, onvalue=1, offvalue=0).grid(row=14, column=3, padx=0,
                                                                                           pady=0, sticky=W + E)
 
 

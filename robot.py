@@ -130,21 +130,20 @@ class Robot:
         temp_ry = ry[0::every]
         temp_lx = lx[0::every]
         temp_ly = ly[0::every]
-        fig_num = 1
 
         fig = plt.figure()
         ax = fig.add_subplot(111, autoscale_on=False, xlim=(min(temp_x)-0.2, max(temp_x)+0.2), ylim=(min(temp_y)-0.2, max(temp_y)+0.2))
         ax.grid()
-        line, = ax.plot([], [], 'b-', lw=2)
-        line_l, = ax.plot([], [], 'r-', lw=2)
-        line_r, = ax.plot([], [], 'g-', lw=2)
+        line, = ax.plot([], [], 'b-', lw=2, label='Tazisko')
+        line_l, = ax.plot([], [], 'r-', lw=2, label='Lave koleso')
+        line_r, = ax.plot([], [], 'g-', lw=2, label='Prave koleso')
+        ax.legend()
         thisx = []
         thisy = []
         l_x = []
         l_y = []
         r_x = []
         r_y = []
-        dt = t[1]-t[0]
 
         def init():
             line.set_data([], [])
@@ -361,7 +360,7 @@ class Robot:
         pygame.draw.lines(surface, black, True, scatter_r, 4)
 
         # smer otocenia v hre
-
+        # green = (0, 255, 0)
         # l_sipka = 50
         # x_sipka = self.pos_x + (l_sipka * np.cos(self.phi))
         # y_sipka = self.pos_y + (l_sipka * np.sin(self.phi))
